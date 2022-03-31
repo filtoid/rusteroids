@@ -1,3 +1,4 @@
+// This file and the instructions on contained within this tutorial was taken from https://rustrepo.com/repo/AngryLawyer-rust-sdl2
 use std::env;
 use std::path::PathBuf;
 
