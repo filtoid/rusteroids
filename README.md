@@ -30,5 +30,7 @@ A more complete set of instructions can be found here (https://rustrepo.com/repo
 ## Tutorials
 This will be updated when the tutorials have been made/published. The tags will match the tutorial numbers. I'm hoping to be able to get YouTube videos to demonstrate how to make each stage of this project, however this takes time, so please be patient while these are in production. 
 
+Tutorial 1 (tagged as `tutorial1` in the codebase) - https://youtu.be/SzxWkoK4uv4
+
 ## License
 This example project is provided with the MIT license. My understanding of this is that this means you can take this code, change it, release it, sell it, do as you want with it. No guarantee is provided that this code won't melt your computer (although I hope it won't). If you make something really cool then please let me know and we'll post a link to it somewhere in this Readme. 
