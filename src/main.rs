@@ -3,30 +3,47 @@ use sdl2::event::Event;
 use sdl2::keyboard::Keycode;
 use sdl2::pixels::Color; 
 use sdl2::render::{WindowCanvas, TextureCreator};
-use sdl2::rect::Rect;
 use sdl2::video::WindowContext;
+
+use sdl2::rect::Rect;
+use sdl2::rect::Point;
 
 use std::time::Duration;
 use std::path::Path;
 
-fn render(canvas: &mut WindowCanvas, texture_creator: &TextureCreator<WindowContext>, font: &sdl2::ttf::Font) -> Result<(), String> {  // 
+pub mod texture_manager;
+
+const IMAGE_WIDTH:u32 = 100;
+const IMAGE_HEIGHT:u32 = 100;
+const OUTPUT_WIDTH: u32 = 50;
+const OUTPUT_HEIGHT: u32 = 50;
+const SCREEN_WIDTH: i32 = 800;
+const SCREEN_HEIGHT: i32 = 600;
+
+fn render(canvas: &mut WindowCanvas, texture_manager: &mut texture_manager::TextureManager<WindowContext>, _texture_creator: &TextureCreator<WindowContext>, _font: &sdl2::ttf::Font) -> Result<(), String> {  // 
     let color = Color::RGB(0, 0, 0);
     canvas.set_draw_color(color);
     canvas.clear();
     
-    // Draw Greeting
-    let hello_text: String = "Hello World".to_string();
-    let surface = font
-        .render(&hello_text)
-        .blended(Color::RGBA(255, 0, 0, 128))
-        .map_err(|e| e.to_string())?;
-    
-    let texture = texture_creator
-        .create_texture_from_surface(&surface)
-        .map_err(|e| e.to_string())?;
+    // Draw Space Ship
+    let src = Rect::new(0,0,IMAGE_WIDTH,IMAGE_HEIGHT);
+    let x: i32 = (SCREEN_WIDTH/2) as i32;
+    let y: i32 = (SCREEN_HEIGHT/2) as i32;
 
-    let target = Rect::new(10 as i32, 0 as i32, 200 as u32, 100 as u32);
-    canvas.copy(&texture, None, Some(target))?;
+    let dest = Rect::new(x - ((OUTPUT_WIDTH/2) as i32),y - ((OUTPUT_HEIGHT/2) as i32),OUTPUT_WIDTH,OUTPUT_HEIGHT);    
+    let center = Point::new( (OUTPUT_WIDTH/2) as i32, (OUTPUT_HEIGHT) as i32);
+
+    let texture = texture_manager.load("img/space_ship.png")?;
+
+    canvas.copy_ex(
+        &texture, // Texture object
+        src,      // source rect
+        dest,     // destination rect
+        279.0,      // angle (degrees)
+        center,   // center
+        false,    // flip horizontal
+        false     // flip vertical
+    )?;
 
     canvas.present();
     Ok(())
@@ -47,6 +64,10 @@ fn main() -> Result<(), String> {
         .expect("could not make a canvas");
 
     let texture_creator = canvas.texture_creator();
+    let mut tex_man = texture_manager::TextureManager::new(&texture_creator);
+    
+    // Load the images before the main loop so we don't try and load during gameplay
+    tex_man.load("img/space_ship.png")?;
 
     // Prepare fonts
     let ttf_context = sdl2::ttf::init().map_err(|e| e.to_string())?; 
@@ -70,7 +91,7 @@ fn main() -> Result<(), String> {
             }
         }
 
-        render(&mut canvas, &texture_creator, &font)?;
+        render(&mut canvas, &mut tex_man, &texture_creator, &font)?;
 
         // Time management
         ::std::thread::sleep(Duration::new(0, 1_000_000_000u32 / 60));
