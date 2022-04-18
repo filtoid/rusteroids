@@ -32,9 +32,9 @@ This will be updated when the tutorials have been made/published. The tags will 
 
 | Tutorial | Tag | Description | Link |
 | -------- | --- | ----------- | ---- |
-| Tutorial 1 | `tutorial1` | Getting set up with an SDL2 Window | [YouTube](https://youtu.be/SzxWkoK4uv4) |
-| Tutorial 2 | `tutorial2` | Drawing Text to an SDL2 Canvas | [YouTube](https://youtu.be/vVJIYaX3Kjw) |
-| Tutorial 3 | `tutorial3` | Draw a PNG to the SDL2 Canvas | [YouTube](https://youtu.be/scGSiMF02eo) |
+| Tutorial 1 | [tutorial1](https://github.com/filtoid/rusteroids/releases/tag/tutorial1) | Getting set up with an SDL2 Window | [YouTube](https://youtu.be/SzxWkoK4uv4) |
+| Tutorial 2 | [tutorial2](https://github.com/filtoid/rusteroids/releases/tag/tutorial2) | Drawing Text to an SDL2 Canvas | [YouTube](https://youtu.be/vVJIYaX3Kjw) |
+| Tutorial 3 | [tutorial3](https://github.com/filtoid/rusteroids/releases/tag/tutorial3) | Draw a PNG to the SDL2 Canvas | [YouTube](https://youtu.be/scGSiMF02eo) |
 
 ## License
 This example project is provided with the MIT license. My understanding of this is that this means you can take this code, change it, release it, sell it, do as you want with it. No guarantee is provided that this code won't melt your computer (although I hope it won't). If you make something really cool then please let me know and we'll post a link to it somewhere in this Readme. 
