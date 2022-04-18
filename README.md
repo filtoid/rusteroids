@@ -30,9 +30,11 @@ A more complete set of instructions can be found here (https://rustrepo.com/repo
 ## Tutorials
 This will be updated when the tutorials have been made/published. The tags will match the tutorial numbers. I'm hoping to be able to get YouTube videos to demonstrate how to make each stage of this project, however this takes time, so please be patient while these are in production. 
 
-Tutorial 1 (tagged as `tutorial1` in the codebase) - [YouTube](https://youtu.be/SzxWkoK4uv4)
-Tutorial 2 (tagged as `tutorial2` in the codebase) - [YouTube](https://youtu.be/vVJIYaX3Kjw)
-Tutorial 3 (tagged as `tutorial3` in the codebase) - [YouTube](https://youtu.be/scGSiMF02eo)
+| Tutorial | Tag | Description | Link |
+| -------- | --- | ----------- | ---- |
+| Tutorial 1 | `tutorial1` | Getting set up with an SDL2 Window | [YouTube](https://youtu.be/SzxWkoK4uv4) |
+| Tutorial 2 | `tutorial2` | Drawing Text to an SDL2 Canvas | [YouTube](https://youtu.be/vVJIYaX3Kjw) |
+| Tutorial 3 | `tutorial3` | Draw a PNG to the SDL2 Canvas | [YouTube](https://youtu.be/scGSiMF02eo) |
 
 ## License
 This example project is provided with the MIT license. My understanding of this is that this means you can take this code, change it, release it, sell it, do as you want with it. No guarantee is provided that this code won't melt your computer (although I hope it won't). If you make something really cool then please let me know and we'll post a link to it somewhere in this Readme. 
