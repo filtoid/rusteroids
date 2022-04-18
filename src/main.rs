@@ -8,59 +8,50 @@ use sdl2::video::WindowContext;
 use sdl2::rect::Rect;
 use sdl2::rect::Point;
 
+use specs::{World, WorldExt, Join};
+
 use std::time::Duration;
 use std::path::Path;
 use std::collections::HashMap;
 
 pub mod texture_manager;
 pub mod utils;
+pub mod components;
 
-const IMAGE_WIDTH:u32 = 100;
-const IMAGE_HEIGHT:u32 = 100;
-const OUTPUT_WIDTH: u32 = 100;
-const OUTPUT_HEIGHT: u32 = 100;
-const SCREEN_WIDTH: i32 = 800;
-const SCREEN_HEIGHT: i32 = 600;
+pub mod game;
 
-fn render(canvas: &mut WindowCanvas, texture_manager: &mut texture_manager::TextureManager<WindowContext>, _texture_creator: &TextureCreator<WindowContext>, _font: &sdl2::ttf::Font, key_manager:&HashMap<String, bool>) -> Result<(), String> {  // 
+fn render(canvas: &mut WindowCanvas, texture_manager: &mut texture_manager::TextureManager<WindowContext>, _texture_creator: &TextureCreator<WindowContext>, _font: &sdl2::ttf::Font, ecs: &World) -> Result<(), String> {  // 
     let color = Color::RGB(0, 0, 0);
     canvas.set_draw_color(color);
     canvas.clear();
+   
+    let positions = ecs.read_storage::<components::Position>();
+    let renderables = ecs.read_storage::<components::Renderable>();
     
-    // Draw Space Ship
-    let src = Rect::new(0,0,IMAGE_WIDTH,IMAGE_HEIGHT);
-    let x: i32 = (SCREEN_WIDTH/2) as i32;
-    let y: i32 = (SCREEN_HEIGHT/2) as i32;
-
-    let dest = Rect::new(x - ((OUTPUT_WIDTH/2) as i32),y - ((OUTPUT_HEIGHT/2) as i32),OUTPUT_WIDTH,OUTPUT_HEIGHT);    
-    let center = Point::new( (OUTPUT_WIDTH/2) as i32, (OUTPUT_HEIGHT/2) as i32);
-
-    let texture = texture_manager.load("img/space_ship.png")?;
-    let mut angle:f64 = 0.0;
-
-    if utils::is_key_pressed(&key_manager, "W") {
-        angle = 0.0;
-    }else if utils::is_key_pressed(&key_manager, "D") {
-        angle = 90.0;
-    }else if utils::is_key_pressed(&key_manager, "S") {
-        angle = 180.0;
-    }else if utils::is_key_pressed(&key_manager, "A") {
-        angle = 270.0;
+    for (renderable, pos) in (&renderables, &positions).join() {
+        let src = Rect::new(0,0,renderable.i_w,renderable.i_h);
+        let x: i32 = pos.x as i32;
+        let y: i32 = pos.y as i32;
+        let dest = Rect::new(x - ((renderable.o_w/2) as i32),y - ((renderable.o_h/2) as i32),renderable.o_w,renderable.o_h);
+        
+        let center = Point::new( (renderable.o_w/2) as i32, (renderable.o_h/2) as i32);
+        let texture = texture_manager.load(&renderable.tex_name)?;
+        canvas.copy_ex(
+            &texture, 
+            src, //source rect 
+            dest, // dest rect
+            pos.rot, // angle
+            center,  // center
+            false, // flip horizontal
+            false // flip vertical
+        )?;
     }
-
-    canvas.copy_ex(
-        &texture, // Texture object
-        src,      // source rect
-        dest,     // destination rect
-        angle,      // angle (degrees)
-        center,   // center
-        false,    // flip horizontal
-        false     // flip vertical
-    )?;
-
+    
     canvas.present();
     Ok(())
 }
+
+struct State { ecs: World }
 
 fn main() -> Result<(), String> {
     println!("Starting Rusteroids");
@@ -91,6 +82,15 @@ fn main() -> Result<(), String> {
     let mut event_pump = sdl_context.event_pump()?;
     let mut key_manager: HashMap<String, bool> = HashMap::new();
     
+    let mut gs = State{
+        ecs: World::new()
+    };
+    gs.ecs.register::<components::Position>();
+    gs.ecs.register::<components::Renderable>();
+    gs.ecs.register::<components::Player>();
+    
+    game::load_world(&mut gs.ecs);
+
     'running: loop {
         // Handle events
         for event in event_pump.poll_iter() {
@@ -120,8 +120,8 @@ fn main() -> Result<(), String> {
                 _ => {} 
             }
         }
-
-        render(&mut canvas, &mut tex_man, &texture_creator, &font, &key_manager)?;
+        game::update(&mut gs.ecs, &mut key_manager);
+        render(&mut canvas, &mut tex_man, &texture_creator, &font, &gs.ecs)?;
 
         // Time management
         ::std::thread::sleep(Duration::new(0, 1_000_000_000u32 / 60));
