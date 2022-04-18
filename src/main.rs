@@ -13,15 +13,16 @@ use std::path::Path;
 use std::collections::HashMap;
 
 pub mod texture_manager;
+pub mod utils;
 
 const IMAGE_WIDTH:u32 = 100;
 const IMAGE_HEIGHT:u32 = 100;
-const OUTPUT_WIDTH: u32 = 50;
-const OUTPUT_HEIGHT: u32 = 50;
+const OUTPUT_WIDTH: u32 = 100;
+const OUTPUT_HEIGHT: u32 = 100;
 const SCREEN_WIDTH: i32 = 800;
 const SCREEN_HEIGHT: i32 = 600;
 
-fn render(canvas: &mut WindowCanvas, texture_manager: &mut texture_manager::TextureManager<WindowContext>, _texture_creator: &TextureCreator<WindowContext>, _font: &sdl2::ttf::Font) -> Result<(), String> {  // 
+fn render(canvas: &mut WindowCanvas, texture_manager: &mut texture_manager::TextureManager<WindowContext>, _texture_creator: &TextureCreator<WindowContext>, _font: &sdl2::ttf::Font, key_manager:&HashMap<String, bool>) -> Result<(), String> {  // 
     let color = Color::RGB(0, 0, 0);
     canvas.set_draw_color(color);
     canvas.clear();
@@ -32,15 +33,26 @@ fn render(canvas: &mut WindowCanvas, texture_manager: &mut texture_manager::Text
     let y: i32 = (SCREEN_HEIGHT/2) as i32;
 
     let dest = Rect::new(x - ((OUTPUT_WIDTH/2) as i32),y - ((OUTPUT_HEIGHT/2) as i32),OUTPUT_WIDTH,OUTPUT_HEIGHT);    
-    let center = Point::new( (OUTPUT_WIDTH/2) as i32, (OUTPUT_HEIGHT) as i32);
+    let center = Point::new( (OUTPUT_WIDTH/2) as i32, (OUTPUT_HEIGHT/2) as i32);
 
     let texture = texture_manager.load("img/space_ship.png")?;
+    let mut angle:f64 = 0.0;
+
+    if utils::is_key_pressed(&key_manager, "W") {
+        angle = 0.0;
+    }else if utils::is_key_pressed(&key_manager, "D") {
+        angle = 90.0;
+    }else if utils::is_key_pressed(&key_manager, "S") {
+        angle = 180.0;
+    }else if utils::is_key_pressed(&key_manager, "A") {
+        angle = 270.0;
+    }
 
     canvas.copy_ex(
         &texture, // Texture object
         src,      // source rect
         dest,     // destination rect
-        279.0,      // angle (degrees)
+        angle,      // angle (degrees)
         center,   // center
         false,    // flip horizontal
         false     // flip vertical
@@ -105,12 +117,11 @@ fn main() -> Result<(), String> {
                         }
                     }
                  },
-                
                 _ => {} 
             }
         }
 
-        render(&mut canvas, &mut tex_man, &texture_creator, &font)?;
+        render(&mut canvas, &mut tex_man, &texture_creator, &font, &key_manager)?;
 
         // Time management
         ::std::thread::sleep(Duration::new(0, 1_000_000_000u32 / 60));
