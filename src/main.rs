@@ -10,6 +10,7 @@ use sdl2::rect::Point;
 
 use std::time::Duration;
 use std::path::Path;
+use std::collections::HashMap;
 
 pub mod texture_manager;
 
@@ -76,7 +77,8 @@ fn main() -> Result<(), String> {
     font.set_style(sdl2::ttf::FontStyle::BOLD);
  
     let mut event_pump = sdl_context.event_pump()?;
-
+    let mut key_manager: HashMap<String, bool> = HashMap::new();
+    
     'running: loop {
         // Handle events
         for event in event_pump.poll_iter() {
@@ -87,6 +89,23 @@ fn main() -> Result<(), String> {
                 Event::KeyDown { keycode: Some(Keycode::Escape), .. } => {
                     break 'running;
                 },
+                Event::KeyDown { keycode, .. } => {
+                    match keycode {
+                        None => {},
+                        Some(key) => {
+                            utils::key_down(&mut key_manager, key.to_string());
+                        }
+                    }
+                },
+                Event::KeyUp { keycode, .. } => {
+                    match keycode {
+                        None => {},
+                        Some(key) => {
+                            utils::key_up(&mut key_manager, key.to_string());
+                        }
+                    }
+                 },
+                
                 _ => {} 
             }
         }
