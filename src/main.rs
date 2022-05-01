@@ -20,6 +20,9 @@ pub mod components;
 
 pub mod game;
 
+const GAME_WIDTH: u32 = 800;
+const GAME_HEIGHT: u32 = 600;
+
 fn render(canvas: &mut WindowCanvas, texture_manager: &mut texture_manager::TextureManager<WindowContext>, _texture_creator: &TextureCreator<WindowContext>, _font: &sdl2::ttf::Font, ecs: &World) -> Result<(), String> {  // 
     let color = Color::RGB(0, 0, 0);
     canvas.set_draw_color(color);
@@ -59,7 +62,7 @@ fn main() -> Result<(), String> {
     let sdl_context = sdl2::init()?;
     let video_subsystem = sdl_context.video()?;
 
-    let window = video_subsystem.window("Rusteroids", 800, 600)
+    let window = video_subsystem.window("Rusteroids", GAME_WIDTH, GAME_HEIGHT)
         .position_centered()
         .build()
         .expect("could not initialize video subsystem");
