@@ -17,7 +17,6 @@ use std::collections::HashMap;
 pub mod texture_manager;
 pub mod utils;
 pub mod components;
-
 pub mod game;
 
 const GAME_WIDTH: u32 = 800;

@@ -1,5 +1,6 @@
 use specs::prelude::*;
 use specs_derive::Component;
+use vector2d::Vector2D;
 
 #[derive(Component)]
 pub struct Position {
@@ -30,4 +31,7 @@ pub struct Renderable {
 }
 
 #[derive(Component)]
-pub struct Player {}
+pub struct Player {
+    pub impulse: Vector2D<f64>, // The next impulse to add to the speed
+    pub cur_speed: Vector2D<f64> // The current speed of the player
+}
