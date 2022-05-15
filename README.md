@@ -4,7 +4,7 @@ A rust asteroids game, made mostly for learning purposes but may offer someone e
 ## How the project was born
 I have been curious about Rust for a long time and this project was born out of my wanting to learn Rust. It probably has a lot of issues and "bad practice" so there is no guarantee that it's done "correctly". I am very interested in suggestions or glaringly obvious issues with the code, so please let me know if you see something. 
 
-## Installing SDL2
+## Installing SDL2 - Windows
 You will need to download the SDL2 development libraries. [https://www.libsdl.org/download-2.0.php](https://www.libsdl.org/download-2.0.php). Export the libraries into the following folders
 ```
 msvc
