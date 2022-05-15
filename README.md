@@ -37,6 +37,9 @@ This will be updated when the tutorials have been made/published. The tags will 
 | Tutorial 3 | [tutorial3](https://github.com/filtoid/rusteroids/releases/tag/tutorial3) | Draw a PNG to the SDL2 Canvas | [YouTube](https://youtu.be/scGSiMF02eo) |
 | Tutorial 4 | [tutorial4](https://github.com/filtoid/rusteroids/releases/tag/tutorial4) | Adding a Key Manager | [YouTube](https://www.youtube.com/flU6h4iHdhw) |
 | Tutorial 5 | [tutorial5](https://github.com/filtoid/rusteroids/releases/tag/tutorial5) | Adding Specs Entity Component System (ECS) | [YouTube](https://youtu.be/HtESVyc0DNY) |
+| Tutorial 6 | [tutorial6](https://github.com/filtoid/rusteroids/releases/tag/tutorial6) | Adding Movement to the Player Character | [YouTube](https://youtu.be/sBx2x0n72AI) |
+| Tutorial 7 | [tutorial7](https://github.com/filtoid/rusteroids/releases/tag/tutorial7) | Adding Momentum to the Player Character | [YouTube](https://youtu.be/OltffJldfZg) |
+
 
 ## License
 This example project is provided with the MIT license. My understanding of this is that this means you can take this code, change it, release it, sell it, do as you want with it. No guarantee is provided that this code won't melt your computer (although I hope it won't). If you make something really cool then please let me know and we'll post a link to it somewhere in this Readme. 
