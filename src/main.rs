@@ -8,7 +8,7 @@ use sdl2::video::WindowContext;
 use sdl2::rect::Rect;
 use sdl2::rect::Point;
 
-use specs::{World, WorldExt, Join};
+use specs::{World, WorldExt, Join, DispatcherBuilder};
 
 use std::time::Duration;
 use std::path::Path;
@@ -18,6 +18,7 @@ pub mod texture_manager;
 pub mod utils;
 pub mod components;
 pub mod game;
+pub mod asteroid; 
 
 const GAME_WIDTH: u32 = 800;
 const GAME_HEIGHT: u32 = 600;
@@ -42,7 +43,7 @@ fn render(canvas: &mut WindowCanvas, texture_manager: &mut texture_manager::Text
             &texture, 
             src, //source rect 
             dest, // dest rect
-            pos.rot, // angle
+            renderable.rot, // angle
             center,  // center
             false, // flip horizontal
             false // flip vertical
@@ -74,6 +75,7 @@ fn main() -> Result<(), String> {
     
     // Load the images before the main loop so we don't try and load during gameplay
     tex_man.load("img/space_ship.png")?;
+    tex_man.load("img/asteroid.png")?;
 
     // Prepare fonts
     let ttf_context = sdl2::ttf::init().map_err(|e| e.to_string())?; 
@@ -90,7 +92,12 @@ fn main() -> Result<(), String> {
     gs.ecs.register::<components::Position>();
     gs.ecs.register::<components::Renderable>();
     gs.ecs.register::<components::Player>();
+    gs.ecs.register::<components::Asteroid>();
     
+    let mut dispatcher = DispatcherBuilder::new()
+                        .with(asteroid::AsteroidMover, "asteroid_mover", &[])
+                        .build();
+
     game::load_world(&mut gs.ecs);
 
     'running: loop {
@@ -122,7 +129,9 @@ fn main() -> Result<(), String> {
                 _ => {} 
             }
         }
+        
         game::update(&mut gs.ecs, &mut key_manager);
+        dispatcher.dispatch(&gs.ecs);
         render(&mut canvas, &mut tex_man, &texture_creator, &font, &gs.ecs)?;
 
         // Time management

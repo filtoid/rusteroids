@@ -8,8 +8,9 @@ const PLAYER_SPEED: f64 = 4.5;
 pub fn update(ecs: &mut World, key_manager: &mut HashMap<String, bool>) {
     let mut positions = ecs.write_storage::<crate::components::Position>();
     let mut players = ecs.write_storage::<crate::components::Player>();
-    
-    for (player, pos) in (&mut players, &mut positions).join() {
+    let mut renderables = ecs.write_storage::<crate::components::Renderable>();
+
+    for (player, pos, renderable) in (&mut players, &mut positions, &mut renderables).join() {
         if crate::utils::is_key_pressed(&key_manager, "D") {
             pos.rot += ROTATION_SPEED;
         }
@@ -46,6 +47,9 @@ pub fn update(ecs: &mut World, key_manager: &mut HashMap<String, bool>) {
         if pos.y < 0.0 {
             pos.y += crate::GAME_HEIGHT as f64;
         }
+
+        // Update the graphic to reflect the rotation
+        renderable.rot = pos.rot;
     }
 }
 
@@ -74,8 +78,8 @@ pub fn load_world(ecs: &mut World) {
             tex_name: String::from("img/space_ship.png"),
             i_w: 100,
             i_h: 100,
-            o_w: 100,
-            o_h: 100,
+            o_w: 50,
+            o_h: 50,
             frame: 0,
             total_frames: 1,
             rot: 0.0
@@ -83,6 +87,24 @@ pub fn load_world(ecs: &mut World) {
         .with(crate::components::Player {
             impulse: vector2d::Vector2D::new(0.0,0.0),
             cur_speed: vector2d::Vector2D::new(0.0,0.0)
+        })
+        .build();
+
+    ecs.create_entity()
+        .with(crate::components::Position{ x:400.0, y:235.0, rot: 45.0})
+        .with(crate::components::Renderable{
+            tex_name: String::from("img/asteroid.png"),
+            i_w: 100,
+            i_h: 100,
+            o_w: 50,
+            o_h: 50,
+            frame: 0,
+            total_frames: 1,
+            rot: 0.0
+        })
+        .with(crate::components::Asteroid {
+            speed: 2.5,
+            rot_speed: 0.5
         })
         .build();
 }

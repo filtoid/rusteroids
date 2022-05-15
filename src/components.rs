@@ -35,3 +35,9 @@ pub struct Player {
     pub impulse: Vector2D<f64>, // The next impulse to add to the speed
     pub cur_speed: Vector2D<f64> // The current speed of the player
 }
+
+#[derive(Component)]
+pub struct Asteroid  {
+    pub speed: f64,
+    pub rot_speed: f64
+}
