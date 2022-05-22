@@ -39,6 +39,7 @@ This will be updated when the tutorials have been made/published. The tags will 
 | Tutorial 5 | [tutorial5](https://github.com/filtoid/rusteroids/releases/tag/tutorial5) | Adding Specs Entity Component System (ECS) | [YouTube](https://youtu.be/HtESVyc0DNY) |
 | Tutorial 6 | [tutorial6](https://github.com/filtoid/rusteroids/releases/tag/tutorial6) | Adding Movement to the Player Character | [YouTube](https://youtu.be/sBx2x0n72AI) |
 | Tutorial 7 | [tutorial7](https://github.com/filtoid/rusteroids/releases/tag/tutorial7) | Adding Momentum to the Player Character | [YouTube](https://youtu.be/OltffJldfZg) |
+| Tutorial 8 | [tutorial8](https://github.com/filtoid/rusteroids/releases/tag/tutorial8) | Adding Asteroid to the game world | [YouTube](https://youtu.be/8YuS3d51PJo) |
 
 
 ## License
