@@ -6,6 +6,22 @@ const ROTATION_SPEED: f64 = 1.5;
 const PLAYER_SPEED: f64 = 4.5;
 
 pub fn update(ecs: &mut World, key_manager: &mut HashMap<String, bool>) {
+    // Check status of game world
+    let mut must_reload_world = false;     
+    {
+        let players = ecs.read_storage::<crate::components::Player>();
+        if players.join().count() < 1 {
+            must_reload_world = true;
+        }
+    }
+
+    if must_reload_world {
+        // Remove all of the previous entities so we can start again
+        ecs.delete_all();
+        // Reset the world to first state
+        load_world(ecs);
+    }
+
     let mut positions = ecs.write_storage::<crate::components::Position>();
     let mut players = ecs.write_storage::<crate::components::Player>();
     let mut renderables = ecs.write_storage::<crate::components::Renderable>();

@@ -1,4 +1,5 @@
 use specs::{System, WriteStorage, Join};
+use specs::prelude::Entities;
 
 pub struct AsteroidMover;
 
@@ -43,3 +44,35 @@ impl<'a> System<'a> for AsteroidMover {
         }
     }
 }
+
+
+
+pub struct AsteroidCollider;
+
+impl<'a> System<'a> for AsteroidCollider {
+    type SystemData = (
+        WriteStorage<'a, components::Position>,
+        WriteStorage<'a, components::Renderable>,
+        WriteStorage<'a, components::Player>,
+        WriteStorage<'a, components::Asteroid>,
+        Entities<'a>
+    );
+
+    fn run(&mut self, data: Self::SystemData) {
+        let (positions, rends, players, asteroids, entities) = data;
+        
+        for (player_pos, player_rend, _, entity) in (&positions, &rends, &players, &entities).join() {
+            for (asteroid_pos, asteroid_rend, _) in (&positions, &rends, &asteroids).join() {
+                let diff_x: f64 = (player_pos.x - asteroid_pos.x).abs();
+                let diff_y: f64 = (player_pos.y - asteroid_pos.y).abs();
+                let hyp: f64 = ((diff_x*diff_x) + (diff_y*diff_y)).sqrt();
+
+                if hyp < (asteroid_rend.o_w + player_rend.o_w) as f64/2.0 {
+                    println!("Player Died");        
+                    entities.delete(entity).ok();
+                }
+            }
+        }
+    }
+
+}   

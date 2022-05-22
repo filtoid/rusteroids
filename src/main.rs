@@ -96,6 +96,7 @@ fn main() -> Result<(), String> {
     
     let mut dispatcher = DispatcherBuilder::new()
                         .with(asteroid::AsteroidMover, "asteroid_mover", &[])
+                        .with(asteroid::AsteroidCollider, "asteroid_collider", &[])
                         .build();
 
     game::load_world(&mut gs.ecs);
@@ -132,6 +133,7 @@ fn main() -> Result<(), String> {
         
         game::update(&mut gs.ecs, &mut key_manager);
         dispatcher.dispatch(&gs.ecs);
+        gs.ecs.maintain();
         render(&mut canvas, &mut tex_man, &texture_creator, &font, &gs.ecs)?;
 
         // Time management
