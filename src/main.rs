@@ -19,6 +19,7 @@ pub mod utils;
 pub mod components;
 pub mod game;
 pub mod asteroid; 
+pub mod missile;
 
 const GAME_WIDTH: u32 = 800;
 const GAME_HEIGHT: u32 = 600;
@@ -76,6 +77,7 @@ fn main() -> Result<(), String> {
     // Load the images before the main loop so we don't try and load during gameplay
     tex_man.load("img/space_ship.png")?;
     tex_man.load("img/asteroid.png")?;
+    tex_man.load("img/missile.png")?;
 
     // Prepare fonts
     let ttf_context = sdl2::ttf::init().map_err(|e| e.to_string())?; 
@@ -93,10 +95,12 @@ fn main() -> Result<(), String> {
     gs.ecs.register::<components::Renderable>();
     gs.ecs.register::<components::Player>();
     gs.ecs.register::<components::Asteroid>();
+    gs.ecs.register::<components::Missile>();
     
     let mut dispatcher = DispatcherBuilder::new()
                         .with(asteroid::AsteroidMover, "asteroid_mover", &[])
                         .with(asteroid::AsteroidCollider, "asteroid_collider", &[])
+                        .with(missile::MissileMover, "missile_mover", &[])
                         .build();
 
     game::load_world(&mut gs.ecs);
@@ -110,6 +114,12 @@ fn main() -> Result<(), String> {
                 },
                 Event::KeyDown { keycode: Some(Keycode::Escape), .. } => {
                     break 'running;
+                },
+                Event::KeyDown { keycode: Some(Keycode::Space), ..} => {
+                    utils::key_down(&mut key_manager, " ".to_string());
+                },
+                Event::KeyUp { keycode: Some(Keycode::Space), ..} => {
+                    utils::key_up(&mut key_manager, " ".to_string());
                 },
                 Event::KeyDown { keycode, .. } => {
                     match keycode {

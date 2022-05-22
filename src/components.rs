@@ -41,3 +41,8 @@ pub struct Asteroid  {
     pub speed: f64,
     pub rot_speed: f64
 }
+
+#[derive(Component)]
+pub struct Missile {
+    pub speed: f64
+}
