@@ -41,7 +41,7 @@ This will be updated when the tutorials have been made/published. The tags will 
 | Tutorial 7 | [tutorial7](https://github.com/filtoid/rusteroids/releases/tag/tutorial7) | Adding Momentum to the Player Character | [YouTube](https://youtu.be/OltffJldfZg) |
 | Tutorial 8 | [tutorial8](https://github.com/filtoid/rusteroids/releases/tag/tutorial8) | Adding Asteroid to the game world | [YouTube](https://youtu.be/8YuS3d51PJo) |
 | Tutorial 9 | [tutorial9](https://github.com/filtoid/rusteroids/releases/tag/tutorial9) | Colliding the Asteroid and Player | [YouTube](https://youtu.be/KTDdlWErmYU) |
-| Tutorial 10 | [tutorial9](https://github.com/filtoid/rusteroids/releases/tag/tutorial9) | Allowing Player to Fire a Missile | [YouTube](https://youtu.be/Qk_EVsG_IhA) |
+| Tutorial 10 | [tutorial10](https://github.com/filtoid/rusteroids/releases/tag/tutorial10) | Allowing Player to Fire a Missile | [YouTube](https://youtu.be/Qk_EVsG_IhA) |
 
 
 ## License
