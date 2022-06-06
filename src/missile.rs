@@ -32,3 +32,31 @@ impl<'a> System<'a> for MissileMover {
     }
 }
 
+pub struct MissileStriker;
+
+impl<'a> System<'a> for MissileStriker {
+    type SystemData = (
+        WriteStorage<'a, components::Position>,
+        WriteStorage<'a, components::Renderable>,
+        WriteStorage<'a, components::Missile>,
+        WriteStorage<'a, components::Asteroid>,
+        WriteStorage<'a, components::Player>,
+        Entities<'a>,
+    );
+
+    fn run(&mut self, data: Self::SystemData) {
+        let (positions, rends, missiles, asteroids, _players, entities) = &data;
+        
+        for (missile_pos, _, _, missile_entity) in (positions, rends, missiles, entities).join() {
+            for (asteroid_pos, asteroid_rend, _, asteroid_entity) in (positions, rends, asteroids, entities).join() {
+                let diff_x: f64 = (missile_pos.x - asteroid_pos.x).abs();
+                let diff_y: f64 = (missile_pos.y - asteroid_pos.y).abs();
+                let hyp :f64 = ((diff_x*diff_x) + (diff_y*diff_y)).sqrt();
+                if hyp < asteroid_rend.o_w as f64/2.0 { 
+                    entities.delete(missile_entity).ok();
+                    entities.delete(asteroid_entity).ok();
+                }
+            }
+        }
+    }
+}

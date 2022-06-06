@@ -101,6 +101,7 @@ fn main() -> Result<(), String> {
                         .with(asteroid::AsteroidMover, "asteroid_mover", &[])
                         .with(asteroid::AsteroidCollider, "asteroid_collider", &[])
                         .with(missile::MissileMover, "missile_mover", &[])
+                        .with(missile::MissileStriker, "missile_striker", &[])
                         .build();
 
     game::load_world(&mut gs.ecs);
