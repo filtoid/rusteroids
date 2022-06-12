@@ -46,7 +46,8 @@ impl<'a> System<'a> for MissileStriker {
 
     fn run(&mut self, data: Self::SystemData) {
         let (positions, rends, missiles, asteroids, _players, entities) = &data;
-        
+        let mut asteroid_creation = Vec::<components::PendingAsteroid>::new();        
+
         for (missile_pos, _, _, missile_entity) in (positions, rends, missiles, entities).join() {
             for (asteroid_pos, asteroid_rend, _, asteroid_entity) in (positions, rends, asteroids, entities).join() {
                 let diff_x: f64 = (missile_pos.x - asteroid_pos.x).abs();
@@ -55,8 +56,31 @@ impl<'a> System<'a> for MissileStriker {
                 if hyp < asteroid_rend.o_w as f64/2.0 { 
                     entities.delete(missile_entity).ok();
                     entities.delete(asteroid_entity).ok();
+                    let new_size = asteroid_rend.o_w/2;
+                    if new_size >= 25 {
+                        asteroid_creation.push(components::PendingAsteroid{x: asteroid_pos.x, y: asteroid_pos.y, rot: asteroid_pos.rot - 90.0, size: new_size});
+                        asteroid_creation.push(components::PendingAsteroid{x: asteroid_pos.x, y: asteroid_pos.y, rot: asteroid_pos.rot + 90.0, size: new_size});
+                    }
                 }
             }
+        }
+    
+        
+        let (mut positions, mut rends, _, mut asteroids, _, entities) = data;
+        for new_asteroid in asteroid_creation {
+            let new_ast = entities.create();
+            positions.insert(new_ast,components::Position{x: new_asteroid.x, y: new_asteroid.y, rot: new_asteroid.rot}).ok();
+            asteroids.insert(new_ast, components::Asteroid{speed: 2.5, rot_speed: 0.5}).ok();
+            rends.insert(new_ast, components::Renderable{
+                tex_name: String::from("img/asteroid.png"),
+                i_w: 100,
+                i_h: 100,
+                o_w: new_asteroid.size,
+                o_h: new_asteroid.size,
+                frame: 0,
+                total_frames: 1,
+                rot: 0.0
+            }).ok();
         }
     }
 }

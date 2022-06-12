@@ -64,7 +64,7 @@ pub fn update(ecs: &mut World, key_manager: &mut HashMap<String, bool>) {
             current_player_position.y =  crate::GAME_HEIGHT as f64/4.0;
             current_player_position.rot = 45.0;
         }
-        create_asteroid(ecs,current_player_position);
+        create_asteroid(ecs,current_player_position, 100);
     }
 
     let mut player_pos = components::Position{x: 0.0, y: 0.0, rot: 0.0};
@@ -167,18 +167,18 @@ pub fn load_world(ecs: &mut World) {
             cur_speed: vector2d::Vector2D::new(0.0,0.0)
         })
         .build();
-    create_asteroid(ecs, components::Position{ x: 400.0, y: 235.0, rot: 45.0});
+    create_asteroid(ecs, components::Position{ x: 400.0, y: 235.0, rot: 45.0}, 50);
 }
 
-pub fn create_asteroid(ecs: &mut World, position: components::Position){
+pub fn create_asteroid(ecs: &mut World, position: components::Position, asteroid_size: u32){
     ecs.create_entity()
     .with(position)
     .with(components::Renderable{
         tex_name: String::from("img/asteroid.png"),
         i_w: 100,
         i_h: 100,
-        o_w: 50,
-        o_h: 50,
+        o_w: asteroid_size,
+        o_h: asteroid_size,
         frame: 0,
         total_frames: 1,
         rot: 0.0
