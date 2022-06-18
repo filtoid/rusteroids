@@ -1,8 +1,8 @@
 name: Rusteroids Build Job
 on: [push]
 jobs:
-  build-and-release:
-    name: Rust project
+  build-and-release-ubuntu:
+    name: Rusteroids Ubuntu
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -16,6 +16,19 @@ jobs:
           sudo apt-get install libsdl2-dev
           sudo apt install libsdl2-image-dev
           sudo apt install libsdl2-ttf-dev
+      - uses: actions-rs/cargo@v1
+        with:
+          command: build
+          args: --release --all-features
+  build-and-release-windows:
+    name: Rusteroids Windows
+    runs-on: windows-2019
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+      - name: move_dependency_files
       - uses: actions-rs/cargo@v1
         with:
           command: build
