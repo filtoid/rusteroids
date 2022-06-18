@@ -1,0 +1,66 @@
+name: Rusteroids Build Job
+on: 
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-release-ubuntu:
+    name: Rusteroids Ubuntu
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+      - name: install_dependencies
+        run: |
+          sudo add-apt-repository -y "deb http://archive.ubuntu.com/ubuntu `lsb_release -sc` main universe restricted multiverse"
+          sudo apt-get update -y -qq
+          sudo apt-get install libsdl2-dev
+          sudo apt install libsdl2-image-dev
+          sudo apt install libsdl2-ttf-dev
+      - uses: actions-rs/cargo@v1
+        with:
+          command: build
+          args: --release --all-features
+      - name: copy executable
+        run: |
+          cp target/release/rusteroids.exe ./
+      - name: Create Linux Release
+        id: create_release_linux
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Linux Release ${{ github.ref }}
+          draft: false
+          prerelease: false
+
+  build-and-release-windows:
+    name: Rusteroids Windows
+    runs-on: windows-2019
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+      - uses: actions-rs/cargo@v1
+        with:
+          command: build
+          args: --release --all-features
+      - name: copy executable
+        run: |
+          cp target/release/rusteroids.exe ./
+      - uses: actions-rs/cargo@v1
+      - name: Create Windows Release
+        id: create_release_windows
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Windows Release ${{ github.ref }}
+          draft: false
+          prerelease: false

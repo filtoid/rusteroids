@@ -13,6 +13,8 @@ Cargo.lock
 # Added by cargo
 
 /target
-/msvc
 
+
+# Commenting to try and run with github actions
+# /msvc
 *.dll

@@ -46,3 +46,10 @@ pub struct Asteroid  {
 pub struct Missile {
     pub speed: f64
 }
+
+pub struct PendingAsteroid {
+    pub x: f64,
+    pub y: f64,
+    pub rot: f64,
+    pub size: u32
+}
