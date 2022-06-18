@@ -1,5 +1,9 @@
 name: Rusteroids Build Job
-on: [push]
+on: 
+  push:
+    branches:
+      - main
+
 jobs:
   build-and-release-ubuntu:
     name: Rusteroids Ubuntu
@@ -20,6 +24,20 @@ jobs:
         with:
           command: build
           args: --release --all-features
+      - name: copy executable
+        run: |
+          cp target/release/rusteroids.exe ./
+      - name: Create Linux Release
+        id: create_release_linux
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Linux Release ${{ github.ref }}
+          draft: false
+          prerelease: false
+
   build-and-release-windows:
     name: Rusteroids Windows
     runs-on: windows-2019
@@ -32,3 +50,17 @@ jobs:
         with:
           command: build
           args: --release --all-features
+      - name: copy executable
+        run: |
+          cp target/release/rusteroids.exe ./
+      - uses: actions-rs/cargo@v1
+      - name: Create Windows Release
+        id: create_release_windows
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Windows Release ${{ github.ref }}
+          draft: false
+          prerelease: false
