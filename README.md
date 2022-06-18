@@ -43,6 +43,7 @@ This will be updated when the tutorials have been made/published. The tags will 
 | Tutorial 9 | [tutorial9](https://github.com/filtoid/rusteroids/releases/tag/tutorial9) | Colliding the Asteroid and Player | [YouTube](https://youtu.be/KTDdlWErmYU) |
 | Tutorial 10 | [tutorial10](https://github.com/filtoid/rusteroids/releases/tag/tutorial10) | Allowing Player to Fire a Missile | [YouTube](https://youtu.be/Qk_EVsG_IhA) |
 | Tutorial 11 | [tutorial11](https://github.com/filtoid/rusteroids/releases/tag/tutorial11) | Making the missile collide with the asteroid | [YouTube](https://youtu.be/L238bFAk_QI) |
+| Tutorial 12 | [tutorial12](https://github.com/filtoid/rusteroids/releases/tag/tutorial12) | Splitting the asteroid into different sizes | [YouTube](https://youtu.be/k0rB7IRHRhQ) |
 
 ## License
 This example project is provided with the MIT license. My understanding of this is that this means you can take this code, change it, release it, sell it, do as you want with it. No guarantee is provided that this code won't melt your computer (although I hope it won't). If you make something really cool then please let me know and we'll post a link to it somewhere in this Readme. 
