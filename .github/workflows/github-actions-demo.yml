@@ -28,7 +28,6 @@ jobs:
       - uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
-      - name: move_dependency_files
       - uses: actions-rs/cargo@v1
         with:
           command: build
