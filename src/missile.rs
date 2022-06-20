@@ -41,12 +41,14 @@ impl<'a> System<'a> for MissileStriker {
         WriteStorage<'a, components::Missile>,
         WriteStorage<'a, components::Asteroid>,
         WriteStorage<'a, components::Player>,
+        WriteStorage<'a, components::GameData>,
         Entities<'a>,
     );
 
     fn run(&mut self, data: Self::SystemData) {
-        let (positions, rends, missiles, asteroids, _players, entities) = &data;
+        let (positions, rends, missiles, asteroids, _players, _, entities) = &data;
         let mut asteroid_creation = Vec::<components::PendingAsteroid>::new();        
+        let mut score: u32 = 0;
 
         for (missile_pos, _, _, missile_entity) in (positions, rends, missiles, entities).join() {
             for (asteroid_pos, asteroid_rend, _, asteroid_entity) in (positions, rends, asteroids, entities).join() {
@@ -54,6 +56,7 @@ impl<'a> System<'a> for MissileStriker {
                 let diff_y: f64 = (missile_pos.y - asteroid_pos.y).abs();
                 let hyp :f64 = ((diff_x*diff_x) + (diff_y*diff_y)).sqrt();
                 if hyp < asteroid_rend.o_w as f64/2.0 { 
+                    score += 10;
                     entities.delete(missile_entity).ok();
                     entities.delete(asteroid_entity).ok();
                     let new_size = asteroid_rend.o_w/2;
@@ -66,7 +69,7 @@ impl<'a> System<'a> for MissileStriker {
         }
     
         
-        let (mut positions, mut rends, _, mut asteroids, _, entities) = data;
+        let (mut positions, mut rends, _, mut asteroids, _, _, entities) = data;
         for new_asteroid in asteroid_creation {
             let new_ast = entities.create();
             positions.insert(new_ast,components::Position{x: new_asteroid.x, y: new_asteroid.y, rot: new_asteroid.rot}).ok();
@@ -81,6 +84,11 @@ impl<'a> System<'a> for MissileStriker {
                 total_frames: 1,
                 rot: 0.0
             }).ok();
+        }
+
+        let (_, _, _, _, _, mut gamedatas, _) = data;
+        for mut gamedata in (&mut gamedatas).join() {
+            gamedata.score += score;
         }
     }
 }

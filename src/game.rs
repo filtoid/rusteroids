@@ -167,7 +167,12 @@ pub fn load_world(ecs: &mut World) {
             cur_speed: vector2d::Vector2D::new(0.0,0.0)
         })
         .build();
+    
     create_asteroid(ecs, components::Position{ x: 400.0, y: 235.0, rot: 45.0}, 50);
+
+    ecs.create_entity()
+        .with(components::GameData{score: 0})
+        .build();
 }
 
 pub fn create_asteroid(ecs: &mut World, position: components::Position, asteroid_size: u32){
