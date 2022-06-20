@@ -45,5 +45,8 @@ This will be updated when the tutorials have been made/published. The tags will 
 | Tutorial 11 | [tutorial11](https://github.com/filtoid/rusteroids/releases/tag/tutorial11) | Making the missile collide with the asteroid | [YouTube](https://youtu.be/L238bFAk_QI) |
 | Tutorial 12 | [tutorial12](https://github.com/filtoid/rusteroids/releases/tag/tutorial12) | Splitting the asteroid into different sizes | [YouTube](https://youtu.be/k0rB7IRHRhQ) |
 
+## Itch.io - latest release available
+Recently Rusteroids was released to Itch.io - it's obviously not intended as a full game but if you'd like to play the latest code without having to compile the code from here. You can find the code over on [https://filtoid.itch.io/rusteroids](https://filtoid.itch.io/rusteroids). Only the Windows version is available for now, but I hope to get MacOS, Linux and Raspberry Pi (32-bit versions) out soon. 
+
 ## License
 This example project is provided with the MIT license. My understanding of this is that this means you can take this code, change it, release it, sell it, do as you want with it. No guarantee is provided that this code won't melt your computer (although I hope it won't). If you make something really cool then please let me know and we'll post a link to it somewhere in this Readme. 
