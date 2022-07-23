@@ -1,6 +1,7 @@
 use specs::{World, WorldExt, Builder, Join};
 use std::collections::HashMap;
 use vector2d::Vector2D; 
+use rand::Rng; 
 
 use crate::components;
 use crate::utils;
@@ -36,35 +37,42 @@ pub fn update(ecs: &mut World, key_manager: &mut HashMap<String, bool>) {
     
     // Check if all asteroids are missing
     let mut must_create_asteroid = false;
+    let mut number_asteroids: u32 = 0;
     {
         let asteroids = ecs.read_storage::<components::Asteroid>();
         if asteroids.join().count() < 1 {
             must_create_asteroid = true;
+
+            let mut gamedatas = ecs.write_storage::<components::GameData>();
+            for mut gamedata in (&mut gamedatas).join() {
+                gamedata.level += 1;
+                number_asteroids = (gamedata.level / 3) + 1;
+            }
         }
     }
-    if must_create_asteroid {
-        if current_player_position.x > (crate::GAME_WIDTH/2).into() && current_player_position.y < (crate::GAME_HEIGHT/2).into() {
-            // Player top right 
-            current_player_position.x = crate::GAME_WIDTH as f64/4.0;
-            current_player_position.y =  crate::GAME_HEIGHT as f64 - (crate::GAME_HEIGHT as f64 /4.0);
-            current_player_position.rot = 225.0;
-        } else if current_player_position.x < (crate::GAME_WIDTH/2).into() && current_player_position.y < (crate::GAME_HEIGHT/2).into() {
-            // Player top left 
-            current_player_position.x =  crate::GAME_WIDTH as f64 - (crate::GAME_WIDTH as f64/4.0);
-            current_player_position.y =  crate::GAME_HEIGHT as f64 - (crate::GAME_HEIGHT as f64/4.0);
-            current_player_position.rot = 135.0;
-        } else if current_player_position.x > (crate::GAME_WIDTH/2).into() && current_player_position.y > (crate::GAME_HEIGHT/2).into() {
-            // Player bottom right 
-            current_player_position.x =  crate::GAME_WIDTH as f64/4.0;
-            current_player_position.y =  crate::GAME_HEIGHT as f64/4.0;
-            current_player_position.rot = 315.0;
-        } else if current_player_position.x < (crate::GAME_WIDTH/2).into() && current_player_position.y > (crate::GAME_HEIGHT/2).into() {
-            // Player bottom left 
-            current_player_position.x =  crate::GAME_WIDTH as f64 - (crate::GAME_WIDTH as f64/4.0);
-            current_player_position.y =  crate::GAME_HEIGHT as f64/4.0;
-            current_player_position.rot = 45.0;
+    
+    if must_create_asteroid {        
+        let mut asteroid_count: u32 = 0;
+        while asteroid_count < number_asteroids {
+            let mut rng = rand::thread_rng();
+            let next_x = rng.gen_range(50.0..(crate::GAME_WIDTH as f64 - 50.0) );
+            let next_y = rng.gen_range(50.0..(crate::GAME_HEIGHT as f64 - 50.0) );
+            let next_rot = rng.gen_range(0.0..360.0);
+
+            let diff_x = (current_player_position.x - next_x).abs();
+            let diff_y = (current_player_position.y - next_y).abs();
+            if ((diff_x*diff_x) + (diff_y*diff_y)).sqrt() < 150.0 {
+                // We are too close to the player
+                continue;
+            }
+            asteroid_count += 1;
+            let new_asteroid = components::Position {
+                x: next_x,
+                y: next_y,
+                rot: next_rot   
+            };    
+            create_asteroid(ecs,new_asteroid, 100);
         }
-        create_asteroid(ecs,current_player_position, 100);
     }
 
     let mut player_pos = components::Position{x: 0.0, y: 0.0, rot: 0.0};
@@ -171,7 +179,7 @@ pub fn load_world(ecs: &mut World) {
     create_asteroid(ecs, components::Position{ x: 400.0, y: 235.0, rot: 45.0}, 50);
 
     ecs.create_entity()
-        .with(components::GameData{score: 0})
+        .with(components::GameData{score: 0, level: 1})
         .build();
 }
 
@@ -195,7 +203,7 @@ pub fn create_asteroid(ecs: &mut World, position: components::Position, asteroid
     .build();
 }
 
-const MAX_MISSILES: usize = 3;
+const MAX_MISSILES: usize = 5;
 
 fn fire_missile(ecs: &mut World, position: components::Position) {
     {
