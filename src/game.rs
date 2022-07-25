@@ -157,6 +157,8 @@ pub fn update_movement(pos: &mut components::Position, player: &mut components::
     player.impulse = vector2d::Vector2D::new(0.0,0.0);
 }
 
+pub const NUMBER_OF_STARS: u32 = 45;
+
 pub fn load_world(ecs: &mut World) {
     ecs.create_entity()
         .with(components::Position{ x:350.0, y:250.0, rot: 0.0})
@@ -181,6 +183,18 @@ pub fn load_world(ecs: &mut World) {
     ecs.create_entity()
         .with(components::GameData{score: 0, level: 1})
         .build();
+
+    for _ in 0..=NUMBER_OF_STARS{
+        let mut rng = rand::thread_rng();
+        let star_x = rng.gen_range(0.0..crate::GAME_WIDTH as f64);
+        let star_y = rng.gen_range(0.0..crate::GAME_HEIGHT as f64);
+        let size = rng.gen_range(1..=3);
+
+        ecs.create_entity()
+            .with(components::Position{x: star_x, y: star_y, rot: 0.0})
+            .with(components::Star{size: size})
+            .build();
+    }
 }
 
 pub fn create_asteroid(ecs: &mut World, position: components::Position, asteroid_size: u32){

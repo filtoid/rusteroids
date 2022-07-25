@@ -30,6 +30,15 @@ fn render(canvas: &mut WindowCanvas, texture_manager: &mut texture_manager::Text
     canvas.clear();
    
     let positions = ecs.read_storage::<components::Position>();
+    {
+        canvas.set_draw_color(Color::RGBA(255, 255, 255, 128));
+    
+        let stars = ecs.read_storage::<components::Star>();
+        for (pos, star) in (&positions, &stars).join() {
+            canvas.fill_rect(Rect::new(pos.x as i32, pos.y as i32, star.size, star.size))?;
+        }
+    }
+
     let renderables = ecs.read_storage::<components::Renderable>();
     
     for (renderable, pos) in (&renderables, &positions).join() {
@@ -113,6 +122,7 @@ fn main() -> Result<(), String> {
     gs.ecs.register::<components::Asteroid>();
     gs.ecs.register::<components::Missile>();
     gs.ecs.register::<components::GameData>();
+    gs.ecs.register::<components::Star>();
     
     let mut dispatcher = DispatcherBuilder::new()
                         .with(asteroid::AsteroidMover, "asteroid_mover", &[])

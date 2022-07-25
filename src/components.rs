@@ -59,3 +59,8 @@ pub struct GameData {
     pub score: u32,
     pub level: u32
 }
+
+#[derive(Component)]
+pub struct Star {
+    pub size: u32
+}
