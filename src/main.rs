@@ -10,9 +10,12 @@ use sdl2::rect::Point;
 
 use specs::{World, WorldExt, Join, DispatcherBuilder};
 
+use std::sync::Mutex;
 use std::time::Duration;
 use std::path::Path;
 use std::collections::HashMap;
+
+use once_cell::sync::Lazy;
 
 pub mod texture_manager;
 pub mod utils;
@@ -73,7 +76,35 @@ fn render(canvas: &mut WindowCanvas, texture_manager: &mut texture_manager::Text
                 .map_err(|e| e.to_string())?;
 
         let target = Rect::new(10 as i32, 0 as i32, 100 as u32, 50 as u32);
-        canvas.copy(&texture, None, Some(target))?;                    
+        canvas.copy(&texture, None, Some(target))?;        
+        
+        // Show Level
+        let level: String = "Level: ".to_string() + &gamedata.level.to_string();
+        let surface = font
+                    .render(&level)
+                    .blended(Color::RGBA(255, 0, 0, 128))
+                    .map_err(|e| e.to_string())?;
+        let texture = texture_creator
+                .create_texture_from_surface(&surface)
+                .map_err(|e| e.to_string())?;
+
+        let target = Rect::new((crate::GAME_WIDTH-110) as i32, 0 as i32, 100 as u32, 50 as u32);
+        canvas.copy(&texture, None, Some(target))?;  
+
+        // High Score
+        let high_score_value = &GAMESTATE.lock().unwrap().high_score;
+        let high_score: String = "High Score: ".to_string() + &high_score_value.to_string();
+        let surface = font
+                    .render(&high_score)
+                    .blended(Color::RGBA(255, 0, 0, 128))
+                    .map_err(|e| e.to_string())?;
+        let texture = texture_creator
+                .create_texture_from_surface(&surface)
+                .map_err(|e| e.to_string())?;
+
+        let target = Rect::new(10 as i32, (crate::GAME_HEIGHT-60) as i32, 100 as u32, 50 as u32);
+        canvas.copy(&texture, None, Some(target))?;  
+
     } 
 
     canvas.present();
@@ -81,6 +112,18 @@ fn render(canvas: &mut WindowCanvas, texture_manager: &mut texture_manager::Text
 }
 
 struct State { ecs: World }
+
+pub struct GameState {
+    high_score: u32
+}
+
+static GAMESTATE: Lazy<Mutex<GameState>> = Lazy::new(
+    || Mutex::new(
+        GameState{
+            high_score: 0
+        }
+    )
+);
 
 fn main() -> Result<(), String> {
     println!("Starting Rusteroids");

@@ -89,6 +89,10 @@ impl<'a> System<'a> for MissileStriker {
         let (_, _, _, _, _, mut gamedatas, _) = data;
         for mut gamedata in (&mut gamedatas).join() {
             gamedata.score += score;
+            let mut gamestate = crate::GAMESTATE.lock().unwrap();
+            if gamedata.score > gamestate.high_score {
+                gamestate.high_score = gamedata.score;
+            }
         }
     }
 }
