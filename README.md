@@ -48,7 +48,7 @@ This will be updated when the tutorials have been made/published. The tags will 
 | Tutorial 14 | [tutorial14](https://github.com/filtoid/rusteroids/releases/tag/tutorial14) | Adding More Asteroids | [YouTube](https://youtu.be/miihzQvfTZY) |
 | Tutorial 15 | [tutorial15](https://github.com/filtoid/rusteroids/releases/tag/tutorial15) | Adding Stars in the Background | [YouTube](https://youtu.be/gN5-2U7qAiY) |
 | Tutorial 16 | [tutorial16](https://github.com/filtoid/rusteroids/releases/tag/tutorial16) | Storing High Score in a Global State Struct | [YouTube](https://youtu.be/HvemwHgRaf4) |
-
+| Tutorial 17 | [tutorial17](https://github.com/filtoid/rusteroids/releases/tag/tutorial17) | Wrapping the player image around | [YouTube](https://youtu.be/PpQn7YvXTnc) |
 
 ## Itch.io - latest release available
 Recently Rusteroids was released to Itch.io - it's obviously not intended as a full game but if you'd like to play the latest code without having to compile the code from here. You can find the code over on [https://filtoid.itch.io/rusteroids](https://filtoid.itch.io/rusteroids). Only the Windows version is available for now, but I hope to get MacOS, Linux and Raspberry Pi (32-bit versions) out soon. 
