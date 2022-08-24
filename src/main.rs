@@ -18,6 +18,7 @@ use std::collections::HashMap;
 use once_cell::sync::Lazy;
 
 pub mod texture_manager;
+pub mod sound_manager;
 pub mod utils;
 pub mod components;
 pub mod game;
@@ -187,6 +188,10 @@ fn main() -> Result<(), String> {
     tex_man.load("img/asteroid.png")?;
     tex_man.load("img/missile.png")?;
 
+    let mut sound_manager = sound_manager::SoundManager::new();
+    // Load Sounds to prevent loading during gameplay
+    sound_manager.load_sound(&"sounds/fx/missile.ogg".to_string());
+
     // Prepare fonts
     let ttf_context = sdl2::ttf::init().map_err(|e| e.to_string())?; 
     let font_path: &Path = Path::new(&"fonts/OpenSans-Bold.ttf");
@@ -206,6 +211,7 @@ fn main() -> Result<(), String> {
     gs.ecs.register::<components::Missile>();
     gs.ecs.register::<components::GameData>();
     gs.ecs.register::<components::Star>();
+    gs.ecs.register::<components::SoundCue>();
     
     let mut dispatcher = DispatcherBuilder::new()
                         .with(asteroid::AsteroidMover, "asteroid_mover", &[])
@@ -255,8 +261,17 @@ fn main() -> Result<(), String> {
         game::update(&mut gs.ecs, &mut key_manager);
         dispatcher.dispatch(&gs.ecs);
         gs.ecs.maintain();
-        render(&mut canvas, &mut tex_man, &texture_creator, &font, &gs.ecs)?;
 
+        let mut cues = gs.ecs.write_storage::<components::SoundCue>();
+        let entities = gs.ecs.entities();
+        
+        for (cue, entity) in (&cues, &entities).join() {
+            sound_manager.play_sound(cue.filename.to_string());
+            entities.delete(entity).ok(); 
+        }
+
+        render(&mut canvas, &mut tex_man, &texture_creator, &font, &gs.ecs)?;
+        
         // Time management
         ::std::thread::sleep(Duration::new(0, 1_000_000_000u32 / 60));
     }

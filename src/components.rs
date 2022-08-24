@@ -64,3 +64,8 @@ pub struct GameData {
 pub struct Star {
     pub size: u32
 }
+
+#[derive(Component)]
+pub struct SoundCue {
+    pub filename: String
+}

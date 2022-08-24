@@ -242,4 +242,8 @@ fn fire_missile(ecs: &mut World, position: components::Position) {
             speed: 5.0
         })
         .build();
+
+    ecs.create_entity()
+        .with(components::SoundCue{filename: "sounds/fx/missile.ogg".to_string()})
+        .build();
 }
