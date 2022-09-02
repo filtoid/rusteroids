@@ -48,6 +48,8 @@ This will be updated when the tutorials have been made/published. The tags will 
 | Tutorial 14 | [tutorial14](https://github.com/filtoid/rusteroids/releases/tag/tutorial14) | Adding More Asteroids | [YouTube](https://youtu.be/miihzQvfTZY) |
 | Tutorial 15 | [tutorial15](https://github.com/filtoid/rusteroids/releases/tag/tutorial15) | Adding Stars in the Background | [YouTube](https://youtu.be/gN5-2U7qAiY) |
 | Tutorial 16 | [tutorial16](https://github.com/filtoid/rusteroids/releases/tag/tutorial16) | Storing High Score in a Global State Struct | [YouTube](https://youtu.be/HvemwHgRaf4) |
+| Tutorial 17 | [tutorial17](https://github.com/filtoid/rusteroids/releases/tag/tutorial17) | Wrapping the player image around | [YouTube](https://youtu.be/PpQn7YvXTnc) |
+| Tutorial 18 | [tutorial18](https://github.com/filtoid/rusteroids/releases/tag/tutorial18) | Adding Sound with Kira | [YouTube](https://youtu.be/E08S_tJWgYE) |
 
 
 ## Itch.io - latest release available
