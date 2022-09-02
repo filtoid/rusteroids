@@ -77,19 +77,23 @@ pub fn update(ecs: &mut World, key_manager: &mut HashMap<String, bool>) {
 
     let mut player_pos = components::Position{x: 0.0, y: 0.0, rot: 0.0};
     let mut must_fire_missile = false;
-        
+    let mut thruster_pushed = false;
     {
         let mut positions = ecs.write_storage::<components::Position>();
         let mut players = ecs.write_storage::<components::Player>();
         let mut renderables = ecs.write_storage::<components::Renderable>();
         
+
         for (player, pos, renderable) in (&mut players, &mut positions, &mut renderables).join() {
             if crate::utils::is_key_pressed(&key_manager, "D") {
                 pos.rot += ROTATION_SPEED;
+                thruster_pushed = true;
             }
             if crate::utils::is_key_pressed(&key_manager, "A") {
                 pos.rot -= ROTATION_SPEED;
+                thruster_pushed = true;
             }
+
             update_movement(pos, player);
             if crate::utils::is_key_pressed(&key_manager, "W") {
                 let radians = pos.rot.to_radians();
@@ -99,6 +103,8 @@ pub fn update(ecs: &mut World, key_manager: &mut HashMap<String, bool>) {
                 let move_vec = Vector2D::<f64>::new(move_x, move_y);
 
                 player.impulse += move_vec;
+
+                thruster_pushed = true;
             }
 
             if pos.rot > 360.0 {
@@ -131,7 +137,17 @@ pub fn update(ecs: &mut World, key_manager: &mut HashMap<String, bool>) {
 
             // Update the graphic to reflect the rotation
             renderable.rot = pos.rot;
-        }
+        }   
+    }
+
+    if thruster_pushed {
+        ecs.create_entity()
+            .with(components::SoundCue{filename: crate::THRUSTER_FILENAME.to_string(), sc_type: components::SoundCueType::LoopSound})
+            .build();
+    } else {
+        ecs.create_entity()
+            .with(components::SoundCue{filename: crate::THRUSTER_FILENAME.to_string(), sc_type: components::SoundCueType::StopSound})
+            .build();
     }
 
     if must_fire_missile {
@@ -244,6 +260,6 @@ fn fire_missile(ecs: &mut World, position: components::Position) {
         .build();
 
     ecs.create_entity()
-        .with(components::SoundCue{filename: "sounds/fx/missile.ogg".to_string()})
+        .with(components::SoundCue{filename: crate::MISSILE_FILENAME.to_string(), sc_type: crate::components::SoundCueType::PlaySound})
         .build();
 }

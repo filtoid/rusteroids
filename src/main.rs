@@ -28,6 +28,10 @@ pub mod missile;
 const GAME_WIDTH: u32 = 800;
 const GAME_HEIGHT: u32 = 600;
 
+const MUSIC_FILENAME: &str = "sounds/music/rusteroids_music_short.ogg";
+const THRUSTER_FILENAME: &str = "sounds/fx/thruster.ogg";
+const MISSILE_FILENAME: &str = "sounds/fx/missile.ogg";
+
 fn render(canvas: &mut WindowCanvas, texture_manager: &mut texture_manager::TextureManager<WindowContext>, texture_creator: &TextureCreator<WindowContext>, font: &sdl2::ttf::Font, ecs: &World) -> Result<(), String> {  // 
     let color = Color::RGB(0, 0, 0);
     canvas.set_draw_color(color);
@@ -190,7 +194,9 @@ fn main() -> Result<(), String> {
 
     let mut sound_manager = sound_manager::SoundManager::new();
     // Load Sounds to prevent loading during gameplay
-    sound_manager.load_sound(&"sounds/fx/missile.ogg".to_string());
+    sound_manager.load_sound(&MISSILE_FILENAME.to_string(), false);
+    sound_manager.load_sound(&MUSIC_FILENAME.to_string(), true);
+    sound_manager.load_sound(&THRUSTER_FILENAME.to_string(), true);
 
     // Prepare fonts
     let ttf_context = sdl2::ttf::init().map_err(|e| e.to_string())?; 
@@ -221,7 +227,10 @@ fn main() -> Result<(), String> {
                         .build();
 
     game::load_world(&mut gs.ecs);
-
+    
+    // Start music playing
+    sound_manager.resume_sound(&MUSIC_FILENAME.to_string());
+    
     'running: loop {
         // Handle events
         for event in event_pump.poll_iter() {
@@ -237,6 +246,14 @@ fn main() -> Result<(), String> {
                 },
                 Event::KeyUp { keycode: Some(Keycode::Space), ..} => {
                     utils::key_up(&mut key_manager, " ".to_string());
+                },
+                Event::KeyDown { keycode: Some(Keycode::P), ..} => {
+                    println!("Pausing Music");
+                    sound_manager.stop_sound(&MUSIC_FILENAME.to_string());
+                },
+                Event::KeyDown { keycode: Some(Keycode::O), ..} => {
+                    println!("Resuming Music");
+                    sound_manager.resume_sound(&MUSIC_FILENAME.to_string());
                 },
                 Event::KeyDown { keycode, .. } => {
                     match keycode {
@@ -262,11 +279,17 @@ fn main() -> Result<(), String> {
         dispatcher.dispatch(&gs.ecs);
         gs.ecs.maintain();
 
-        let mut cues = gs.ecs.write_storage::<components::SoundCue>();
+        let cues = gs.ecs.read_storage::<components::SoundCue>();
         let entities = gs.ecs.entities();
         
         for (cue, entity) in (&cues, &entities).join() {
-            sound_manager.play_sound(cue.filename.to_string());
+            if cue.sc_type == crate::components::SoundCueType::PlaySound {
+                sound_manager.play_sound(cue.filename.to_string());
+            }else if cue.sc_type == crate::components::SoundCueType::LoopSound {
+                sound_manager.resume_sound(&cue.filename.to_string());
+            }else if cue.sc_type == crate::components::SoundCueType::StopSound {
+                sound_manager.stop_sound(&cue.filename.to_string());
+            }
             entities.delete(entity).ok(); 
         }
 

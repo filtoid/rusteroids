@@ -65,7 +65,15 @@ pub struct Star {
     pub size: u32
 }
 
+#[derive(PartialEq)]
+pub enum SoundCueType {
+    PlaySound,
+    LoopSound,
+    StopSound
+}
+
 #[derive(Component)]
 pub struct SoundCue {
-    pub filename: String
+    pub filename: String,
+    pub sc_type: SoundCueType
 }
